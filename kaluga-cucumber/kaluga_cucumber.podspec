@@ -11,6 +11,17 @@ Pod::Spec.new do |spec|
     spec.ios.deployment_target = '14.1'
     spec.dependency 'Cucumberish'
                 
+    if !Dir.exist?('build/cocoapods/framework/cucumber.framework') || Dir.empty?('build/cocoapods/framework/cucumber.framework')
+        raise "
+
+        Kotlin framework 'cucumber' doesn't exist yet, so a proper Xcode project can't be generated.
+        'pod install' should be executed after running ':generateDummyFramework' Gradle task:
+
+            ./gradlew :kaluga-cucumber:generateDummyFramework
+
+        Alternatively, proper pod installation is performed during Gradle sync in the IDE (if Podfile location is set)"
+    end
+                
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':kaluga-cucumber',
         'PRODUCT_MODULE_NAME' => 'cucumber',
