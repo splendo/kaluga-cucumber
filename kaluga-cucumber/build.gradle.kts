@@ -65,7 +65,7 @@ android {
     namespace = "com.splendo.kaluga.cucumber"
     compileSdk = 34
     defaultConfig {
-        minSdk = 29
+        minSdk = 24
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
