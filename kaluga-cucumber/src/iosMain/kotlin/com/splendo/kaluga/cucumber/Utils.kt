@@ -19,6 +19,11 @@ import platform.objc.sel_registerName
 actual typealias UserInfo = NSDictionary
 actual val userInfoDefault = NSDictionary()
 
+private const val USER_INFO_XCTESTCASE_KEY = "XCTestCase"
+
+/**
+ * Disables Cucumberish's custom exception throwing.
+ */
 @OptIn(BetaInteropApi::class)
 actual fun disableCucumberishExceptionHandling(userInfo: UserInfo) {
     val testCaseCastedToNSObject = xcTestCaseAsNSObject(userInfo)
@@ -34,6 +39,9 @@ actual fun disableCucumberishExceptionHandling(userInfo: UserInfo) {
     )
 }
 
+/**
+ * Enables Cucumberish's custom exception throwing.
+ */
 @OptIn(BetaInteropApi::class)
 actual fun enableCucumberishExceptionHandling(userInfo: UserInfo) {
     val testCaseCastedToNSObject = xcTestCaseAsNSObject(userInfo)
@@ -53,12 +61,22 @@ private typealias OriginalSelector = COpaquePointer?
 private typealias TargetSelector = COpaquePointer?
 private typealias XCTestCaseClass = NSObject
 
-private fun xcTestCaseAsNSObject(userInfo: UserInfo, ): XCTestCaseClass {
-    val testCase = userInfo.objectForKey("XCTestCase")
+/**
+ * For each step, Cucumberish passes this NSDictionary that contains the specific XCTestCase running
+ * for that step.
+ * "XCTestCase" is the key used to store the `XCTestCase`.
+ */
+private fun xcTestCaseAsNSObject(userInfo: UserInfo): XCTestCaseClass {
+    val testCase = userInfo.objectForKey(USER_INFO_XCTESTCASE_KEY)
     val testCaseCastedToNSObject = (testCase as NSObject)
     return testCaseCastedToNSObject
 }
 
+/**
+ * Create and returns two pointers for two methods with the passed name.
+ * Eventually these pointers are passed to some API that takes also a class type and can identify
+ * what methods the pointers are referring to.
+ */
 private fun methodSelectors(disable: Boolean): Pair<OriginalSelector, TargetSelector> {
     val originalSelector = sel_registerName(
         if (disable)
@@ -77,8 +95,7 @@ private fun methodSelectors(disable: Boolean): Pair<OriginalSelector, TargetSele
 }
 
 /**
- * A copied version of the swizzling method inside the Cucumberish ObjC framework.
- *
+ * Takes care of swapping the implementation of two methods in two classes or on the same one.
  */
 @OptIn(BetaInteropApi::class)
 fun swizzleMethods(
@@ -103,7 +120,8 @@ fun swizzleMethods(
         class_getInstanceMethod(newImplementationClass, newImplementationSelector)
     }
 
-    // Call this API to check if the method from the new implementation is added to the old class with the signature of the old class' method
+    // Call this API to check if the method from the new implementation
+    // is added to the old class with the signature of the old class' method.
     val didAddMethod = class_addMethod(
         actualClass,
         actualImplementationSelector,
@@ -111,6 +129,7 @@ fun swizzleMethods(
         method_getTypeEncoding(swizzledMethod)!!.pointed.value.toString()
     )
     if (didAddMethod) {
+        // Swaps the old method implementation into the newImplementationSelector
         class_replaceMethod(
             actualClass,
             newImplementationSelector,
@@ -118,6 +137,7 @@ fun swizzleMethods(
             method_getTypeEncoding(originalMethod)!!.pointed.value.toString()
         )
     } else {
+        // Swaps originalMethod with swizzledMethod and vice versa without referring to a specific class.
         method_exchangeImplementations(originalMethod, swizzledMethod)
     }
 }
