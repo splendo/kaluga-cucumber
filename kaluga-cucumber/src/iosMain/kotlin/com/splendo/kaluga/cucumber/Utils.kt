@@ -21,10 +21,8 @@ actual val userInfoDefault = NSDictionary()
 
 @OptIn(BetaInteropApi::class)
 actual fun disableCucumberishExceptionHandling(userInfo: UserInfo) {
-    val (testCaseCastedToNSObject, originalSelector, targetSelector) = selectorsWithUserInfo(
-        userInfo,
-        disable = true
-    )
+    val testCaseCastedToNSObject = xcTestCaseAsNSObject(userInfo)
+    val (originalSelector, targetSelector) = methodSelectors(disable = true)
 
     swizzleMethods(
         actualImplementationSelector = originalSelector,
@@ -38,10 +36,8 @@ actual fun disableCucumberishExceptionHandling(userInfo: UserInfo) {
 
 @OptIn(BetaInteropApi::class)
 actual fun enableCucumberishExceptionHandling(userInfo: UserInfo) {
-    val (testCaseCastedToNSObject, originalSelector, targetSelector) = selectorsWithUserInfo(
-        userInfo,
-        disable = false
-    )
+    val testCaseCastedToNSObject = xcTestCaseAsNSObject(userInfo)
+    val (originalSelector, targetSelector) = methodSelectors(disable = false)
 
     swizzleMethods(
         actualImplementationSelector = originalSelector,
@@ -57,15 +53,13 @@ private typealias OriginalSelector = COpaquePointer?
 private typealias TargetSelector = COpaquePointer?
 private typealias XCTestCaseClass = NSObject
 
-private typealias SwizzleSelectors = Triple<XCTestCaseClass, OriginalSelector, TargetSelector>
-
-private fun selectorsWithUserInfo(
-    userInfo: UserInfo,
-    disable: Boolean
-): SwizzleSelectors {
+private fun xcTestCaseAsNSObject(userInfo: UserInfo, ): XCTestCaseClass {
     val testCase = userInfo.objectForKey("XCTestCase")
     val testCaseCastedToNSObject = (testCase as NSObject)
+    return testCaseCastedToNSObject
+}
 
+private fun methodSelectors(disable: Boolean): Pair<OriginalSelector, TargetSelector> {
     val originalSelector = sel_registerName(
         if (disable)
             "recordFailureWithDescription:inFile:atLine:expected:"
@@ -79,8 +73,7 @@ private fun selectorsWithUserInfo(
         else
             "recordFailureWithDescription:inFile:atLine:expected:"
     )
-
-    return Triple(testCaseCastedToNSObject, originalSelector, targetSelector)
+    return Pair(originalSelector, targetSelector)
 }
 
 /**
