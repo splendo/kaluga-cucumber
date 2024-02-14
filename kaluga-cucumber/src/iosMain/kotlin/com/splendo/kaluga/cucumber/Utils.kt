@@ -23,29 +23,12 @@ private const val USER_INFO_XCTESTCASE_KEY = "XCTestCase"
 
 /**
  * Disables Cucumberish's custom exception throwing.
+ * @param disable Represents whether the
  */
 @OptIn(BetaInteropApi::class)
-actual fun disableCucumberishExceptionHandling(userInfo: UserInfo) {
+actual fun toggleCucumberishExceptionHandling(userInfo: UserInfo, disable: Boolean) {
     val testCaseCastedToNSObject = xcTestCaseAsNSObject(userInfo)
-    val (originalSelector, targetSelector) = methodSelectors(disable = true)
-
-    swizzleMethods(
-        actualImplementationSelector = originalSelector,
-        newImplementationSelector = targetSelector,
-        actualClass = testCaseCastedToNSObject.`class`()!!,
-        newImplementationClass = testCaseCastedToNSObject.`class`()!!,
-        actualImplementationIsClassMethod = false,
-        newImplementationIsClassMethod = false
-    )
-}
-
-/**
- * Enables Cucumberish's custom exception throwing.
- */
-@OptIn(BetaInteropApi::class)
-actual fun enableCucumberishExceptionHandling(userInfo: UserInfo) {
-    val testCaseCastedToNSObject = xcTestCaseAsNSObject(userInfo)
-    val (originalSelector, targetSelector) = methodSelectors(disable = false)
+    val (originalSelector, targetSelector) = methodSelectors(disable = disable)
 
     swizzleMethods(
         actualImplementationSelector = originalSelector,
@@ -98,7 +81,7 @@ private fun methodSelectors(disable: Boolean): Pair<OriginalSelector, TargetSele
  * Takes care of swapping the implementation of two methods in two classes or on the same one.
  */
 @OptIn(BetaInteropApi::class)
-fun swizzleMethods(
+private fun swizzleMethods(
     actualImplementationSelector: COpaquePointer?,
     newImplementationSelector: COpaquePointer?,
     actualClass: ObjCClass,
