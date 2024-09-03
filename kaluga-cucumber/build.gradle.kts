@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `maven-publish`
@@ -8,18 +9,14 @@ plugins {
 }
 
 kotlin {
-    targets.configureEach {
-        compilations.configureEach {
-            kotlinOptions.freeCompilerArgs += "-Xexpect-actual-classes"
+    project.tasks.withType(KotlinCompile::class) {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+            freeCompilerArgs.add("-Xexpect-actual-classes")
         }
     }
 
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-            }
-        }
         publishLibraryVariants("release", "debug")
     }
 
@@ -68,14 +65,14 @@ android {
         minSdk = 24
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 android {
     compileOptions {
-        sourceCompatibility =  JavaVersion.VERSION_11
-        targetCompatibility =  JavaVersion.VERSION_11
+        sourceCompatibility =  JavaVersion.VERSION_17
+        targetCompatibility =  JavaVersion.VERSION_17
     }
 }
