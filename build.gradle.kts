@@ -1,7 +1,9 @@
 plugins {
     `maven-publish`
-    id("com.android.library").version("8.5.2").apply(false)
-    kotlin("multiplatform").version("2.0.20").apply(false)
+    alias(libs.plugins.kotlinMultiplatform).apply(false)
+    alias(libs.plugins.android.library).apply(false)
+    alias(libs.plugins.kotlinCocoapods).apply(false)
+    alias(libs.plugins.kotlinter)
 }
 
 tasks.register("clean", Delete::class) {

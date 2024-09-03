@@ -3,15 +3,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `maven-publish`
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    id("com.android.library")
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinCocoapods)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlinter)
 }
 
 kotlin {
     project.tasks.withType(KotlinCompile::class) {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.java.get()))
             freeCompilerArgs.add("-Xexpect-actual-classes")
         }
     }
@@ -52,7 +53,7 @@ kotlin {
         }
         getByName("androidMain") {
             dependencies {
-                implementation("io.cucumber:cucumber-java8:4.8.1")
+                implementation(libs.cucumber.java8)
             }
         }
     }
@@ -60,19 +61,13 @@ kotlin {
 
 android {
     namespace = "com.splendo.kaluga.cucumber"
-    compileSdk = 34
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
     defaultConfig {
-        minSdk = 24
+        minSdk = libs.versions.androidMinSdk.get().toInt()
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-android {
-    compileOptions {
-        sourceCompatibility =  JavaVersion.VERSION_17
-        targetCompatibility =  JavaVersion.VERSION_17
+        val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
 }
