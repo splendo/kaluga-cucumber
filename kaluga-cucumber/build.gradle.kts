@@ -71,3 +71,44 @@ android {
         targetCompatibility = javaVersion
     }
 }
+
+publishing {
+    repositories {
+        maven {
+            name = "snapshots"
+            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            credentials {
+                username = System.getenv("SONATYPE_NEXUS_USERNAME")
+                password = System.getenv("SONATYPE_NEXUS_PASSWORD")
+            }
+        }
+    }
+
+    publications.withType(MavenPublication::class) {
+
+
+        // Provide artifacts information requited by Maven Central
+        pom {
+            name.set(project.name)
+            description.set("Kotlin Mulitplaform wrapper for cucumber")
+            url.set("https://github.com/splendo/kaluga-cucumber")
+
+            licenses {
+                license {
+                    name.set("The Apache Software License, Version 2.0")
+                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    //distribution.set("repo")
+                }
+            }
+            developers {
+                developer {
+                    id.set("splendo")
+                    name.set("Splendo Consulting BV")
+                }
+            }
+            scm {
+                url.set("https://github.com/splendo/kaluga-cucumber")
+            }
+        }
+    }
+}
