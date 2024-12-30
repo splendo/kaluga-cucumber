@@ -1,11 +1,11 @@
 [versions]
-androidGradle = "8.7.2"
+androidGradle = "8.7.3"
 androidBuildTools = "34.0.0"
 androidCompileSdk = "34"
 androidMinSdk = "24"
 cucumberJava8 = "7.20.1"
-kotlin = "2.0.21"
-kotlinter = "4.4.1"
+kotlin = "2.1.0"
+kotlinter = "5.0.1"
 java = "17"
 
 [libraries]
