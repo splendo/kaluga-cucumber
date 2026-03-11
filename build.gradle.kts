@@ -1,5 +1,5 @@
 plugins {
-    `maven-publish`
+    alias(libs.plugins.vanniktechPublish).apply(false)
     alias(libs.plugins.kotlinMultiplatform).apply(false)
     alias(libs.plugins.android.library).apply(false)
     alias(libs.plugins.kotlinCocoapods).apply(false)

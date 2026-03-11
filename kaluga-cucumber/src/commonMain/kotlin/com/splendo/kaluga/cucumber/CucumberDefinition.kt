@@ -4,8 +4,8 @@ typealias Scenario = CucumberDefinition.Descriptive.Example
 
 sealed interface Definition {
     val definitionString: String
-    sealed interface Descriptive : Definition {
 
+    sealed interface Descriptive : Definition {
         /**
          * Represents a whole feature to be described. It groups the other descriptive keywords.
          */
@@ -32,43 +32,75 @@ sealed interface Definition {
         override val definitionString: String
 
         interface Given : Step
+
         interface When : Step
+
         interface Then : Step
     }
 }
 
-sealed class CucumberDefinition(val definitionString: String) {
-
-    sealed class Descriptive(definitionString: String) : Definition.Descriptive, CucumberDefinition(definitionString) {
-
+sealed class CucumberDefinition(
+    val definitionString: String,
+) {
+    sealed class Descriptive(
+        definitionString: String,
+    ) : CucumberDefinition(definitionString),
+        Definition.Descriptive {
         /**
          * Represents a whole feature to be described. It groups the other descriptive keywords.
          */
-        class Feature(override val message: String) : Definition.Descriptive.Feature, Descriptive(message)
+        class Feature(
+            override val message: String,
+        ) : Descriptive(message),
+            Definition.Descriptive.Feature
 
         /**
          * Groups more scenerio that tests a similar flow with a certain rule
          */
-        class Rule(definitionString: String) : Definition.Descriptive.Rule, Descriptive(definitionString)
+        class Rule(
+            definitionString: String,
+        ) : Descriptive(definitionString),
+            Definition.Descriptive.Rule
 
         /**
          * Represents a Scenario, hence a group of steps.
          */
-        class Example(override val message: String) : Definition.Descriptive.Example,  Descriptive(message)
+        class Example(
+            override val message: String,
+        ) : Descriptive(message),
+            Definition.Descriptive.Example
     }
 
-    sealed class Step(definitionString: String) : Definition.Step, CucumberDefinition(definitionString) {
-        class Given(definitionString: String) : Definition.Step.Given, Step(definitionString)
-        class When(definitionString: String) : Definition.Step.When, Step(definitionString)
-        class Then(definitionString: String) : Definition.Step.Then, Step(definitionString)
+    sealed class Step(
+        definitionString: String,
+    ) : CucumberDefinition(definitionString),
+        Definition.Step {
+        class Given(
+            definitionString: String,
+        ) : Step(definitionString),
+            Definition.Step.Given
+
+        class When(
+            definitionString: String,
+        ) : Step(definitionString),
+            Definition.Step.When
+
+        class Then(
+            definitionString: String,
+        ) : Step(definitionString),
+            Definition.Step.Then
     }
 
-    sealed class SubStep(definitionString: String) : CucumberDefinition(definitionString) {
-        class And(definitionString: String) : SubStep(definitionString)
+    sealed class SubStep(
+        definitionString: String,
+    ) : CucumberDefinition(definitionString) {
+        class And(
+            definitionString: String,
+        ) : SubStep(definitionString)
     }
 }
 
-interface GherkinTestCase<D: Definition> {
+interface GherkinTestCase<D : Definition> {
     val definition: D
 }
 
@@ -100,56 +132,82 @@ expect class GherkinLambda1 : GherkinLambda
  * Lambda that takes 2 parameters
  */
 expect class GherkinLambda2 : GherkinLambda
-//expect class GherkinLambda3 : GherkinLambda
-//expect class GherkinLambda4 : GherkinLambda
-//expect class GherkinLambda5 : GherkinLambda
-//expect class GherkinLambda6 : GherkinLambda
-//expect class GherkinLambda7 : GherkinLambda
-//expect class GherkinLambda8 : GherkinLambda
-//expect class GherkinLambda9 : GherkinLambda
-
+// expect class GherkinLambda3 : GherkinLambda
+// expect class GherkinLambda4 : GherkinLambda
+// expect class GherkinLambda5 : GherkinLambda
+// expect class GherkinLambda6 : GherkinLambda
+// expect class GherkinLambda7 : GherkinLambda
+// expect class GherkinLambda8 : GherkinLambda
+// expect class GherkinLambda9 : GherkinLambda
 
 /**
  * Method that wraps the given method that takes 0 parameters
  */
-expect fun given(definitionString: String, lambda: GherkinLambda0)
+expect fun given(
+    definitionString: String,
+    lambda: GherkinLambda0,
+)
 
 /**
  * Method that wraps the given method that takes 1 parameter
  */
-expect fun given(definitionString: String, lambda: GherkinLambda1)
+expect fun given(
+    definitionString: String,
+    lambda: GherkinLambda1,
+)
 
 /**
  * Method that wraps the Given method that takes 2 parameters
  */
-expect fun given(definitionString: String, lambda: GherkinLambda2)
+expect fun given(
+    definitionString: String,
+    lambda: GherkinLambda2,
+)
 
 /**
  * Method that wraps the Then method that takes 0 parameters
  */
-expect fun then(definitionString: String, lambda: GherkinLambda0)
+expect fun then(
+    definitionString: String,
+    lambda: GherkinLambda0,
+)
 
 /**
  * Method that wraps the Then method that takes 1 parameter
  */
-expect fun then(definitionString: String, lambda: GherkinLambda1)
+expect fun then(
+    definitionString: String,
+    lambda: GherkinLambda1,
+)
 
 /**
  * Method that wraps the Then method that takes 2 parameters
  */
-expect fun then(definitionString: String, lambda: GherkinLambda2)
+expect fun then(
+    definitionString: String,
+    lambda: GherkinLambda2,
+)
 
 /**
  * Method that wraps the When method that takes 0 parameters
  */
-expect fun `when`(definitionString: String, lambda: GherkinLambda0)
+expect fun `when`(
+    definitionString: String,
+    lambda: GherkinLambda0,
+)
 
 /**
  * Method that wraps the Then method that takes 1 parameter
  */
-expect fun `when`(definitionString: String, lambda: GherkinLambda1)
+expect fun `when`(
+    definitionString: String,
+    lambda: GherkinLambda1,
+)
 
 /**
  * Method that wraps the Then method that takes 2 parameters
  */
-expect fun `when`(definitionString: String, lambda: GherkinLambda2)
+expect fun `when`(
+    definitionString: String,
+    lambda: GherkinLambda2,
+)

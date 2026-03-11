@@ -1,19 +1,21 @@
 [versions]
-androidGradle = "8.7.3"
+androidGradle = "9.1.0"
 androidBuildTools = "34.0.0"
-androidCompileSdk = "34"
+androidCompileSdk = "36"
 androidMinSdk = "24"
 cucumberJava8 = "7.20.1"
-kotlin = "2.1.0"
-kotlinter = "5.0.1"
-java = "17"
+kotlin = "2.3.20-RC2"
+kotlinter = "5.4.2"
+vanniktechPublish = "0.36.0"
+java = "21"
 
 [libraries]
 cucumber-java8 = { module = "io.cucumber:cucumber-java8", version.ref = "cucumberJava8" }
 
 [plugins]
-android-library = { id = "com.android.library", version.ref = "androidGradle" }
+android-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradle" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
+vanniktechPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechPublish" }
 
