@@ -26,6 +26,10 @@ kotlin {
         namespace = "com.splendo.kaluga.cucumber"
         compileSdk = libs.versions.androidCompileSdk.get().toInt()
         minSdk = libs.versions.androidMinSdk.get().toInt()
+
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
     }
 
     iosX64()
