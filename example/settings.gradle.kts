@@ -28,7 +28,6 @@ rootProject.name = "example"
 
 // Comment out to test against the published artifact on Maven Central instead
 includeBuild("../")
-includeBuild("../../kaluga-uitest")
 
 include(":example-shared")
 include(":example-uitest-shared")

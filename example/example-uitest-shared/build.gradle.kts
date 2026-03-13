@@ -57,7 +57,7 @@ kotlin {
             dependencies {
                 api(project(":example-shared"))
                 api("com.splendo.kaluga.cucumber:kaluga-cucumber:0.2.0-SNAPSHOT")
-                api("com.splendo.kaluga.uitest:kaluga-uitest:0.3.0")
+                api("com.splendo.kaluga.uitest:kaluga-uitest:0.4.0")
             }
         }
     }
